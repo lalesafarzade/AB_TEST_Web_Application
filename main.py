@@ -26,3 +26,7 @@ async def analyze(file: UploadFile):
     }
 
     return result
+
+@app.get("/")
+def home():
+    return {"message": "API is running"}
