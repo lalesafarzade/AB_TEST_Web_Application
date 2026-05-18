@@ -19,10 +19,19 @@ async def analyze(file: UploadFile):
 
     summary, z_stat, p_value = run_ztest(df)
     summary["conversion_rate"] = summary["sum"] / summary["count"]
+    se = (summary["conversion_rate"] * (1 - summary["conversion_rate"]) / summary["count"]) ** 0.5
+
+    ci_low = summary["conversion_rate"] - 1.96 * se
+    ci_high = summary["conversion_rate"]+ 1.96 * se
     result={
         "z_stat":z_stat,
         "p_value":p_value,
-        "conversion_rate":summary["conversion_rate"]
+        "conversion_rate":summary["conversion_rate"],
+        "sum":summary["sum"],
+        "count":summary["count"],
+        "Confidence_intervals_high":ci_high,
+        "Confidence_intervals_low":ci_low,
+
     }
 
     return result
