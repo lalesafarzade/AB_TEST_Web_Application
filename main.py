@@ -26,11 +26,11 @@ async def analyze(file: UploadFile):
     result={
         "z_stat":z_stat,
         "p_value":p_value,
-        "conversion_rate":summary["conversion_rate"],
-        "sum":summary["sum"],
-        "count":summary["count"],
-        "Confidence_intervals_high":ci_high,
-        "Confidence_intervals_low":ci_low,
+        "conversion_rate":summary["conversion_rate"].to_dict(),
+        "sum":summary["sum"].to_dict(),
+        "count":summary["count"].to_dict(),
+        "Confidence_intervals_high":ci_high.to_dict(),
+        "Confidence_intervals_low":ci_low.to_dict(),
 
     }
 
