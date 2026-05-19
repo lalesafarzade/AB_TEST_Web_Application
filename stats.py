@@ -3,7 +3,7 @@ from statsmodels.stats.proportion import proportions_ztest
 import scipy.stats as stats
 
 def run_ztest(df):
-    summary = df.groupby("group")["retention_1"].agg(["sum", "count"])
+    summary = df.groupby("group")["converted"].agg(["sum", "count"])
 
     conversions = summary["sum"].values
     nobs = summary["count"].values

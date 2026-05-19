@@ -1,7 +1,7 @@
 .well{
-  box-shadow: 0 8px 16px -6px rgb(10, 10, 10);
-  padding: 10px;
-  border-radius:7px;
+  box-shadow: 0 8px 16px -4px rgb(10, 10, 10);
+  padding: 20px;
+  border-radius:17px;
   text-align: center;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   background-color: rgb(252, 253, 252);
