@@ -88,6 +88,12 @@ document.getElementById("zstatics").innerHTML = `
        
     `;
 
+document.getElementById("pvalue").innerHTML = `
+      
+       ${Math.round(data.p_value * 100) / 100}
+       
+    `;
+
    var xValue = ['Conversion A', 'Conversion B'];
 
 var yValue = [
