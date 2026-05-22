@@ -1,40 +1,98 @@
-document.getElementById("uploadBtn").addEventListener("click", uploadFile);
 
 async function uploadFile() {
+  const API_BASE = "https://yhq5da2dyb.execute-api.us-east-1.amazonaws.com/prod";
+  const file = document.getElementById("fileInput").files[0];
+  const status = document.getElementById("status");
 
-    const fileInput = document.getElementById("fileInput");
+  if (!file) {
+    status.innerText = "Please select a file";
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
+  const jobId = crypto.randomUUID();
+
+  try {
+    // STEP 1: get presigned upload URL
+    status.innerText = "Getting upload URL...";
 
     const response = await fetch(
-        "https://ab-test-web-application.onrender.com/analyze",
-        {
-            method: "POST",
-            body: formData
-        }
+      `${API_BASE}/create-job?jobId=${jobId}`
     );
 
-    const dataset = await response.json();
+    const data = await response.json();
 
-    console.log(dataset);
+    //console.log("UPLOAD DATA:", data);
 
-   
+    // STEP 2: upload file to S3
+    status.innerText = "Uploading...";
 
-document.getElementById("pvalue").innerHTML = `
-  ${Math.round(dataset.p_value * 100) / 100}
-`;
+    const uploadResponse = await fetch(data.uploadUrl, {
+      method: "PUT",
+      body: file,
+      headers: {
+        "Content-Type": "text/csv"
+      }
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("Upload failed");
+    }
+
+    status.innerText = "Upload successful! Processing...";
+
+    // STEP 3: poll for result (instead of setTimeout)
+    await waitForResult(jobId, status);
+
+  } catch (err) {
+    console.error(err);
+    status.innerText = "Error: " + err.message;
+  }
+}
+
+async function waitForResult(jobId, status) {
+
+  const API_BASE = "https://yhq5da2dyb.execute-api.us-east-1.amazonaws.com/prod";
+
+  while (true) {
+
+    await new Promise(r => setTimeout(r, 3000));
+
+    const resultResponse = await fetch(
+      `${API_BASE}/result?jobId=${jobId}`
+    );
+
+    const resultData = await resultResponse.json();
+
+    //console.log("RESULT:", resultData);
+
+    if (resultData.downloadUrl) {
+
+      const jsonResponse = await fetch(resultData.downloadUrl);
+      const data = await jsonResponse.json();
+
+      renderResults(data);
+
+      status.innerText = "Done!";
+      break;
+    }
+
+    status.innerText = "Processing...";
+  }
+}
+
+
+function renderResults(data) {
 document.getElementById("zstatics").innerHTML = `
       
-       ${Math.round(dataset.z_stat * 100) / 100}
+       ${Math.round(data.z_stat * 100) / 100}
        
     `;
 
-    var xValue = ['Conversion A', 'Conversion B'];
+   var xValue = ['Conversion A', 'Conversion B'];
 
 var yValue = [
-    (dataset.conversion_rate.A * 100).toFixed(2) + '%',
-    (dataset.conversion_rate.B * 100).toFixed(2) + '%'
+    (data.groups.A.conversion_rate * 100).toFixed(2) + '%',
+    (data.groups.B.conversion_rate * 100).toFixed(2) + '%'
 ];
 
 var trace1 = {
@@ -54,7 +112,7 @@ var trace1 = {
   }
 };
 
-var data = [trace1];
+var dataset = [trace1];
 
 var layout = {
   title: {
@@ -63,7 +121,8 @@ var layout = {
   barmode: 'stack', barcornerradius: 15,
 };
 
-Plotly.newPlot('bar', data, layout);
+Plotly.newPlot('bar', dataset, layout);
+
 
 
 const tbody = document.querySelector("#resultsTable tbody");
@@ -83,47 +142,69 @@ function addRow(metric, aValue, bValue) {
 // Add rows
 addRow(
     "Count",
-    dataset.count.A,
-    dataset.count.B
+    data.groups.A.count,
+    data.groups.B.count
 );
 
 addRow(
     "Sum",
-    dataset.sum.A,
-    dataset.sum.B
+    data.groups.A.sum,
+    data.groups.B.sum
 );
 
 addRow(
     "Confidence High",
-    (dataset.Confidence_intervals_high.A * 100).toFixed(2) + "%",
-    (dataset.Confidence_intervals_high.B * 100).toFixed(2) + "%"
+    (data.groups.A.ci[1] * 100).toFixed(2) + "%",
+    (data.groups.B.ci[1] * 100).toFixed(2) + "%"
 );
 
 addRow(
     "Confidence Low",
-    (dataset.Confidence_intervals_low.A * 100).toFixed(2) + "%",
-    (dataset.Confidence_intervals_low.B * 100).toFixed(2) + "%"
+    (data.groups.A.ci[0] * 100).toFixed(2) + "%",
+    (data.groups.B.ci[0] * 100).toFixed(2) + "%"
 );
-
 
 const alpha = 0.05;
 
 document.getElementById("bottom-chart").innerHTML = `
     <h5>Hypothesis Decision</h5>
-    <p><strong>P-Value:</strong> ${Number(dataset.p_value).toFixed(4)}</p>
-    <p><strong>Alpha:</strong> ${alpha}</p>
 
     ${
-        dataset.p_value < alpha
-        ? `<div class="alert alert-success">
-              Reject H0 → Significant difference detected 🎯
-           </div>`
-        : `<div class="alert alert-warning">
-              Fail to reject H0 -→ No significant difference ❌
-           </div>`
+        data.valid_ztest
+        ? `
+            <p><strong>P-Value:</strong> ${Number(data.p_value).toFixed(4)}</p>
+            <p><strong>Alpha:</strong> ${alpha}</p>
+
+            ${
+                data.p_value < alpha
+                ? `<div class="alert alert-success">
+                      Reject H0 → Significant difference detected 🎯
+                   </div>`
+                : `<div class="alert alert-warning">
+                      Fail to reject H0 → No significant difference ❌
+                   </div>`
+            }
+          `
+        : `
+            <div class="alert alert-danger">
+                ${data.warnings.join("<br>")}
+            </div>
+          `
     }
 `;
 
 
-}
+
+
+
+
+
+}   
+
+
+
+
+
+
+
 

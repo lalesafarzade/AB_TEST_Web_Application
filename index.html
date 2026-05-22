@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>A/B Testing Analytics Dashboard</title>
-    <!-- CSS Stylesheets -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/css/style.css">
-  
-    <!-- Font Awesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
-  
-    <!-- Bootstrap Scripts -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-    <link rel="icon" href="favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>A/B Testing Analytics Dashboard</title>
+<!-- CSS Stylesheets -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="static/css/style.css">
+
+<!-- Font Awesome -->
+<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+<!-- Bootstrap Scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+<link rel="icon" href="favicon.ico">
+
 <body>
     <div id="body">
         <div class="container-fluid head">
@@ -29,147 +37,158 @@
                         </div>
                     </div>
                 </div>
-    
+
             </div>
-            
+
         </div>
         <div class="container-fluid">
             <div class="row info">
                 <div class="col-lg-3 col-sm-12">
                     <div class="well">
                         <h10>Please upload a CSV file to begin analysis:</h10>
-                    <input type="file" id="fileInput">
-                    <button id="uploadBtn">Analyze</button>
+                        
+                        <input type="file" id="fileInput">
+                        <button onclick="uploadFile()">Upload</button>
+
+                        <p id="status"></p>
+
+                        <!-- <script src="static/assets/script.js"></script> -->
+                        
                     </div>
                     <div class="row">
 
-    <!-- First Box -->
-    <div class="col-md-6 col-sm-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h5 class="panel-title">P_Value</h5>
-            </div>
-            <div id="pvalue" class="panel-body"></div>
-            
-        </div>
-    </div>
+                        <!-- First Box -->
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">P_Value</h5>
+                                </div>
+                                <div id="pvalue" class="panel-body"></div>
 
-    <!-- Second Box -->
-    <div class="col-md-6 col-sm-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h5 class="panel-title">Z_Statics</h5>
-            </div>
-            <div id="zstatics" class="panel-body">
-                
-            </div>
-        </div>
-    </div>
+                            </div>
+                        </div>
 
-</div>
+                        <!-- Second Box -->
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">Z_Statics</h5>
+                                </div>
+                                <div id="zstatics" class="panel-body">
 
-<!-- Bottom Full Width Box -->
-    <div class="row">
-        <div class="col-12">
-            <div class="chart-box">
-                <h5 class="text-center"></h5>
-                <div id="bottom-chart"></div>
-            </div>
-        </div>
-    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Full Width Box -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-box">
+                                <h5 class="text-center"></h5>
+                                <div id="bottom-chart"></div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="col-lg-8 col-sm-12">
 
-    <!-- Top Row -->
-    <div class="row">
+                    <!-- Top Row -->
+                    <div class="row">
 
-        
 
-        <!-- New Chart -->
-        <div class="col-md-6 mb-3">
 
-    <!-- New Upper Box -->
-    
-<div class="row">
-        <div class="col-12">
-            <div class="chart-box">
-                <h5>How to Use This Dashboard</h5>
-    <ul>
-        <li>Upload a CSV file with <strong>id column</strong>,<strong>group (A/B)</strong> and <strong>converted (true/false)</strong>.</li>
-        <li>Click <strong>Analyze</strong> to run the A/B test.</li>
-        <li>Check <strong>P-Value</strong> and <strong>Z-Statistic</strong>.</li>
-        <li>If p-value &lt; 0.05 → result is statistically significant.</li>
-        <li>Review the table and charts for insights.</li>
-    </ul>
-                <div id="bottom-chart"></div>
+                        <!-- New Chart -->
+                        <div class="col-md-6 mb-3">
+
+                            <!-- New Upper Box -->
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="chart-box">
+                                        <h5>How to Use This Dashboard</h5>
+                                        <ul>
+                                            <li>Upload a CSV file with <strong>id column</strong>,<strong>group
+                                                    (A/B)</strong> and <strong>converted (true/false)</strong>.</li>
+                                            <li>Click <strong>Analyze</strong> to run the A/B test.</li>
+                                            <li>Check <strong>P-Value</strong> and <strong>Z-Statistic</strong>.</li>
+                                            <li>If p-value &lt; 0.05 → result is statistically significant.</li>
+                                            <li>Review the table and charts for insights.</li>
+                                        </ul>
+                                        <div id="bottom-chart"></div>
+                                        <a href="data/ab_testing.csv" download>
+  Download Example CSV
+</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table Box -->
+                            <div class="well d-flex justify-content-center">
+                                <table border="5" id="resultsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>A</th>
+                                            <th>B</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <!-- Bubble Chart -->
+                        <div class="col-md-6 mb-3">
+                            <div class="chart-box">
+                                <h5 class="text-center"></h5>
+                                <div id="bar"></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+
+
             </div>
-        </div>
-    </div>
-
-    <!-- Table Box -->
-    <div class="well d-flex justify-content-center">
-        <table border="5" id="resultsTable">
-            <thead>
-                <tr>
-                    <th>Metric</th>
-                    <th>A</th>
-                    <th>B</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-</div>
-                  
-<!-- Bubble Chart -->
-        <div class="col-md-6 mb-3">
-            <div class="chart-box">
-                <h5 class="text-center"></h5>
-                <div id="bar"></div>
-            </div>
-        </div>
-    
-
-</div>
-</div>
-              
-                
-
-                
-
-            </div>
 
         </div>
-        
-        
-        
-        
-        
+
+
+
+
+
 
     </div>
-    
 
-  <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="static/assets/script.js"></script>
-  
 
-   <!--footer-->
-   <footer class="footer-section" id="footer">
-    <div class="container">  
-      <br>
-      <br>
-      <a href="https://www.linkedin.com/in/lalehsafarzadeh/"><i class="social-icon fab fa-linkedin"></i></a>
-      <a href="https://laleh-safarzadeh.herokuapp.com/"><i class="social-icon fas fa-address-card"></i></a>
-      <a href = "mailto: lalesafarzade@gmail.com"><i class="social-icon fas fa-envelope"></i></a>
-      <a href="https://github.com/lalesafarzade"><i class="social-icon fab fa-github"></i></a><br>
-      <p id="footer">© Copyright Laleh Safarzadeh 2022.</p>
-      
-    </div>
-  </footer>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+    <script src="static/assets/script.js"></script>
+
+
+    <!--footer-->
+    <footer class="footer-section" id="footer">
+        <div class="container">
+            <br>
+            <br>
+            <a href="https://www.linkedin.com/in/lalehsafarzadeh/"><i class="social-icon fab fa-linkedin"></i></a>
+            <a href="https://laleh-safarzadeh.herokuapp.com/"><i class="social-icon fas fa-address-card"></i></a>
+            <a href="mailto: lalesafarzade@gmail.com"><i class="social-icon fas fa-envelope"></i></a>
+            <a href="https://github.com/lalesafarzade"><i class="social-icon fab fa-github"></i></a><br>
+            <p id="footer">© Copyright Laleh Safarzadeh 2022.</p>
+
+        </div>
+    </footer>
 
 
 </body>
+
 </html>
