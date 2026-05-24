@@ -21,7 +21,7 @@ async function uploadFile() {
 
     const data = await response.json();
 
-    //console.log("UPLOAD DATA:", data);
+    console.log("UPLOAD DATA:", data);
 
     // STEP 2: upload file to S3
     status.innerText = "Uploading...";
@@ -63,7 +63,7 @@ async function waitForResult(jobId, status) {
 
     const resultData = await resultResponse.json();
 
-    //console.log("RESULT:", resultData);
+    console.log("RESULT:", resultData);
 
     if (resultData.downloadUrl) {
 
@@ -81,25 +81,25 @@ async function waitForResult(jobId, status) {
 }
 
 
-function renderResults(data) {
-document.getElementById("zstatics").innerHTML = `
+ function renderResults(data) {
+ document.getElementById("zstatics").innerHTML = `
       
-       ${Math.round(data.z_stat * 100) / 100}
+        ${Math.round(data.z_stat * 100) / 100}
        
-    `;
+     `;
 
-document.getElementById("pvalue").innerHTML = `
+ document.getElementById("pvalue").innerHTML = `
       
-       ${Math.round(data.p_value * 100) / 100}
+        ${Math.round(data.p_value * 100) / 100}
        
-    `;
+     `;
 
-   var xValue = ['Conversion A', 'Conversion B'];
+    var xValue = ['Conversion A', 'Conversion B'];
 
-var yValue = [
-    (data.groups.A.conversion_rate * 100).toFixed(2) + '%',
-    (data.groups.B.conversion_rate * 100).toFixed(2) + '%'
-];
+ var yValue = [
+     (data.groups.group_1.conversion_rate * 100).toFixed(2) + '%',
+     (data.groups.group_2.conversion_rate * 100).toFixed(2) + '%'
+ ];
 
 var trace1 = {
   x: xValue,
@@ -147,27 +147,27 @@ function addRow(metric, aValue, bValue) {
 
 // Add rows
 addRow(
-    "Count",
-    data.groups.A.count,
-    data.groups.B.count
+    "Count", 
+    data.groups.group_1.count,
+    data.groups.group_2.count
 );
 
 addRow(
     "Sum",
-    data.groups.A.sum,
-    data.groups.B.sum
-);
+     data.groups.group_1.sum,
+     data.groups.group_2.sum
+ );
 
 addRow(
     "Confidence High",
-    (data.groups.A.ci[1] * 100).toFixed(2) + "%",
-    (data.groups.B.ci[1] * 100).toFixed(2) + "%"
+    (data.groups.group_1.ci[1] * 100).toFixed(2) + "%",
+    (data.groups.group_2.ci[1] * 100).toFixed(2) + "%"
 );
 
 addRow(
     "Confidence Low",
-    (data.groups.A.ci[0] * 100).toFixed(2) + "%",
-    (data.groups.B.ci[0] * 100).toFixed(2) + "%"
+    (data.groups.group_1.ci[0] * 100).toFixed(2) + "%",
+    (data.groups.group_2.ci[0] * 100).toFixed(2) + "%"
 );
 
 const alpha = 0.05;
