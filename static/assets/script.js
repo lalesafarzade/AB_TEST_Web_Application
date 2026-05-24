@@ -12,7 +12,7 @@ async function uploadFile() {
   const jobId = crypto.randomUUID();
 
   try {
-    // STEP 1: get presigned upload URL
+    //  get presigned upload URL
     status.innerText = "Getting upload URL...";
 
     const response = await fetch(
@@ -23,7 +23,7 @@ async function uploadFile() {
 
     console.log("UPLOAD DATA:", data);
 
-    // STEP 2: upload file to S3
+    //  upload file to S3
     status.innerText = "Uploading...";
 
     const uploadResponse = await fetch(data.uploadUrl, {
@@ -40,12 +40,12 @@ async function uploadFile() {
 
     status.innerText = "Upload successful! Processing...";
 
-    // STEP 3: poll for result (instead of setTimeout)
+    // poll for result
     await waitForResult(jobId, status);
 
   } catch (err) {
     console.error(err);
-    status.innerText = "Error: " + err.message;
+    status.innerText = "Your file should be modified based on direction! "
   }
 }
 
